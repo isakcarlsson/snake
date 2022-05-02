@@ -6,6 +6,7 @@ let width = 400;
 let height = 400;
 let bodySize = 20;
 let score = 0;
+let canTurn = true;
 
 function setup() {
     score = 0;
@@ -22,6 +23,7 @@ function setup() {
 }
 
 function draw() {
+    canTurn = true;
     background(0, 150, 0);
     
     //Draw snake
@@ -70,20 +72,35 @@ function detectCrash() {
         }
     }
 
-    if (snake[0][0] < 0 || snake[0][0] > width || snake[0][1] < 0 || snake[0][1] > height) {
-        gameOver();
+    if (snake[0][0] < 0) {
+        snake[0][0] = width - bodySize / 2;
+    } else if (snake[0][0] > width) {
+        snake[0][0] = bodySize / 2;
+    } else if (snake[0][1] < 0) {
+        snake[0][1] = height - bodySize / 2;
+    } else if (snake[0][1] > height) {
+        snake[0][1] = bodySize / 2;
     }
 }
 
 function keyPressed() {
+    if(!canTurn && keyCode != 32) {
+        return;
+    }
+    canTurn = false;
+    
     if (keyCode == LEFT_ARROW && direction != 1) {
         direction = 0;
+        //snake[0][0] -= 20;
     } else if (keyCode == RIGHT_ARROW && direction != 0) {
         direction = 1;
+        //snake[0][0] += 20;
     } else if (keyCode == UP_ARROW && direction != 3) {
         direction = 2;
+        //snake[0][1] -= 20;
     } else if (keyCode == DOWN_ARROW && direction != 2) {
         direction = 3;
+        //snake[0][1] += 20;
     } else if (keyCode == 32) {
         setup();
     }
@@ -114,6 +131,7 @@ function generateFood() {
 }
 
 function gameOver() {
+    canTurn = true;
     document.getElementById("header").innerHTML = "Game Over";
     document.getElementById("info").innerHTML = "Your score is: " + score + "! Press space to play again!";
     frameRate(0);
