@@ -1,10 +1,11 @@
 let snake = [];
+let stones = [];
 let direction = 0;
 let food = [110, 110];
 
-let width = 400;
-let height = 400;
-let bodySize = 20;
+let width = 800;
+let height = 800;
+let bodySize = 40;
 let score = 0;
 let canTurn = true;
 
@@ -19,6 +20,15 @@ function setup() {
     snake.push([width / 2 + bodySize / 2, height / 2 + bodySize / 2]);
     snake.push([width / 2 + bodySize, height / 2 + bodySize / 2]);
     snake.push([width / 2 + 3 * bodySize / 2, height / 2 + bodySize / 2]);
+
+    stones = [];
+
+    for (let i = 0; i < 6; i++) {
+        let x = Math.floor(Math.random() * Math.floor(width / bodySize)) * bodySize;
+        let y = Math.floor(Math.random() * Math.floor(height / bodySize)) * bodySize;
+        stones.push([x, y]);
+    }
+    
     generateFood();
 }
 
@@ -26,8 +36,14 @@ function draw() {
     canTurn = true;
     background(0, 150, 0);
     
+    //Draw stones
+    fill(150, 150, 150)
+    for (i in stones) {
+        rect(stones[i][0], stones[i][1], bodySize, bodySize)
+    }
+
     //Draw snake
-    fill(255)
+    fill(255);
     for (let i = 0; i < snake.length; i++) {
         circle(snake[i][0], snake[i][1], bodySize);
     }
@@ -72,6 +88,13 @@ function detectCrash() {
         }
     }
 
+    for (i in stones) {
+        if (stones[i][0] + bodySize / 2 == snake[0][0] && stones[i][1] + bodySize / 2 == snake[0][1]) {
+            gameOver();
+            return;
+        } 
+    }
+
     if (snake[0][0] < 0) {
         snake[0][0] = width - bodySize / 2;
     } else if (snake[0][0] > width) {
@@ -91,16 +114,16 @@ function keyPressed() {
     
     if (keyCode == LEFT_ARROW && direction != 1) {
         direction = 0;
-        //snake[0][0] -= 20;
+        // snake[0][0] -= 20;
     } else if (keyCode == RIGHT_ARROW && direction != 0) {
         direction = 1;
-        //snake[0][0] += 20;
+        // snake[0][0] += 20;
     } else if (keyCode == UP_ARROW && direction != 3) {
         direction = 2;
-        //snake[0][1] -= 20;
+        // snake[0][1] -= 20;
     } else if (keyCode == DOWN_ARROW && direction != 2) {
         direction = 3;
-        //snake[0][1] += 20;
+        // snake[0][1] += 20;
     } else if (keyCode == 32) {
         setup();
     }
@@ -118,6 +141,12 @@ function eat() {
                 bool = true;
             }
         }
+
+        for (i in stones) {
+            if (stones[i][0] + bodySize / 2 == food[0] && stones[i][1] + bodySize / 2 == food[1]) {
+                bool = true;
+            }
+        }
     }
 
     score += 10;
@@ -131,7 +160,6 @@ function generateFood() {
 }
 
 function gameOver() {
-    canTurn = true;
     document.getElementById("header").innerHTML = "Game Over";
     document.getElementById("info").innerHTML = "Your score is: " + score + "! Press space to play again!";
     frameRate(0);
