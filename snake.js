@@ -29,8 +29,11 @@ function draw() {
     background(0, 150, 0);
     
     //Draw snake
-    fill(255);
+    let p = 255;
+    
     for (let i = 0; i < snake.length; i++) {
+        fill(p);
+        p -= 10;
         circle(snake[i][0], snake[i][1], bodySize);
     }
 
