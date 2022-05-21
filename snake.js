@@ -1,5 +1,4 @@
 let snake = [];
-let stones = [];
 let direction = 0;
 let food = [110, 110];
 
@@ -17,16 +16,9 @@ function setup() {
     frameRate(10);
 
     snake = [];
-    snake.push([width / 2 + bodySize / 2, height / 2 + bodySize / 2]);
-    snake.push([width / 2 + bodySize, height / 2 + bodySize / 2]);
-    snake.push([width / 2 + 3 * bodySize / 2, height / 2 + bodySize / 2]);
-
-    stones = [];
-
-    for (let i = 0; i < 6; i++) {
-        let x = Math.floor(Math.random() * Math.floor(width / bodySize)) * bodySize;
-        let y = Math.floor(Math.random() * Math.floor(height / bodySize)) * bodySize;
-        stones.push([x, y]);
+    
+    for(let i = 0; i < 3; i++) {
+        snake.push([width / 2 + bodySize / 2, height / 2 + bodySize / 2]);
     }
     
     generateFood();
@@ -36,12 +28,6 @@ function draw() {
     canTurn = true;
     background(0, 150, 0);
     
-    //Draw stones
-    fill(150, 150, 150)
-    for (i in stones) {
-        rect(stones[i][0], stones[i][1], bodySize, bodySize)
-    }
-
     //Draw snake
     fill(255);
     for (let i = 0; i < snake.length; i++) {
@@ -88,13 +74,6 @@ function detectCrash() {
         }
     }
 
-    for (i in stones) {
-        if (stones[i][0] + bodySize / 2 == snake[0][0] && stones[i][1] + bodySize / 2 == snake[0][1]) {
-            gameOver();
-            return;
-        } 
-    }
-
     if (snake[0][0] < 0) {
         snake[0][0] = width - bodySize / 2;
     } else if (snake[0][0] > width) {
@@ -138,12 +117,6 @@ function eat() {
 
         for (i in snake) {
             if (snake[i][0] == food[0] && snake[i][1] == food[1]) {
-                bool = true;
-            }
-        }
-
-        for (i in stones) {
-            if (stones[i][0] + bodySize / 2 == food[0] && stones[i][1] + bodySize / 2 == food[1]) {
                 bool = true;
             }
         }
